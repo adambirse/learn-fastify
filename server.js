@@ -2,16 +2,14 @@ const fastify = require("fastify")({
   logger: true,
 });
 
-fastify.get("/", async (request, reply) => {
-  return { hello: "world" };
-});
+const helloRoute = require("./hello-route");
 
-const start = async () => {
-  try {
-    await fastify.listen(3000);
-  } catch (err) {
+fastify.register(helloRoute);
+
+fastify.listen(3000, function (err, address) {
+  if (err) {
     fastify.log.error(err);
     process.exit(1);
   }
-};
-start();
+  fastify.log.info(`server listening on ${address}`);
+});
